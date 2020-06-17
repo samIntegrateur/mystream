@@ -1,38 +1,237 @@
-.App {
-  text-align: center;
+/* Global css */
+
+/* noto-sans-regular - latin */
+@font-face {
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-weight: 400;
+    src: local('Noto Sans'), local('NotoSans'),
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-regular.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-regular.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-700 - latin */
+@font-face {
+    font-family: 'Noto Sans';
+    font-style: normal;
+    font-weight: 700;
+    src: local('Noto Sans Bold'), local('NotoSans-Bold'),
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-700.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-700.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-italic - latin */
+@font-face {
+    font-family: 'Noto Sans';
+    font-style: italic;
+    font-weight: 400;
+    src: local('Noto Sans Italic'), local('NotoSans-Italic'),
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+/* noto-sans-700italic - latin */
+@font-face {
+    font-family: 'Noto Sans';
+    font-style: italic;
+    font-weight: 700;
+    src: local('Noto Sans Bold Italic'), local('NotoSans-BoldItalic'),
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-700italic.woff2') format('woff2'), /* Chrome 26+, Opera 23+, Firefox 39+ */
+    url('fonts/noto-sans-v9-latin/noto-sans-v9-latin-700italic.woff') format('woff'); /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+
+/*
+    Caveats: media queries can't handle vars
+    postcss option is passed and allows it but it doesn't work in styled-components
+    So for media queries, we use breakpoints.tsx
+*/
+
+:root {
+    /*
+        COLORS
+    */
+
+    /* Definitions */
+    --blue: #162993;
+    --blue2: #101e68;
+    --orange: #eb8e21;
+    --orange2: #b46911;
+    --red: #e24335;
+    --red2: #b1352a;
+    --green: #14a872;
+    --green2: #107b54;
+
+    --white: #fff;
+    --gray-lightest: #eee;
+    --gray-light: #ccc;
+    --gray: #666;
+    --gray-dark: #333;
+    --gray-darkest: #222;
+    --black: #000;
+
+    /* Attributions */
+    --primary-color: var(--blue);
+    --primary-color-hover: var(--blue2);
+
+    --secondary-color: var(--orange);
+    --secondary-color-hover: var(--orange2);
+
+    --link-color: var(--secondary-color);
+    --link-color-hover: var(--secondary-color-hover);
+
+    --border-color: var(--gray);
+
+    /*
+        TEXT
+    */
+    --noto-font: 'Noto Sans', arial, helvetica, sans-serif;
+    --line-height: 1.5;
+    --line-height-sm: 1.1;
+
+
+    /*
+        MAIN
+    */
+    --main-font: var(--noto-font);
+    --main-text-color: var(--gray-dark);
+    --main-bg: var(--white);
+
+    --main-font-size: 1rem;
+    --main-line-height: var(--line-height);
+
+    --font-weight-normal: 400;
+    --font-weight-bold: 700;
+
+    /*
+        SPACING
+    */
+    --spacer: 1rem;
+
+    --space-xs: calc(var(--spacer) * 0.7);
+    --space-sm: calc(var(--spacer) * 1);
+    --space-md: calc(var(--spacer) * 1.3);
+    --space-lg: calc(var(--spacer) * 1.8);
+    --space-xl: calc(var(--spacer) * 2.5);
+
+    /*
+        CONTAINER
+    */
+    --container-padding-x: 2rem;
+    --container-padding-y: 2rem;
+    --container-padding-sm-x: 1rem;
+    --container-padding-sm-y: 1.5rem;
+
+    /*
+        HEADER
+    */
+    --header-bg: var(--primary-color);
+    --header-color: var(--white);
+
+    /*
+       FOOTER
+    */
+    --footer-bg: var(--primary-color);
+    --footer-color: var(--white);
+
+    /*
+         TITLE
+    */
+
+    --title-line-height: var(--line-height-sm);
+
+    --title1-color: var(--primary-color);
+    --title1-font-size: 2rem;
+    --title1-font-weight: var(--font-weight-normal);
+
+    --title2-color: var(--main-text-color);
+    --title2-font-size: 1.5rem;
+    --title2-font-weight: var(--font-weight-bold);
+
+    --title3-color: var(--primary-color);
+    --title3-font-size: 1.2rem;
+    --title3-font-weight: var(--font-weight-bold);
+
+    /*
+       BUTTONS
+    */
+    --btn-font: var(--main-font);
+    --btn-font-size: var(--main-font-size);
+    --btn-font-weight: var(--font-weight-normal);
+    --btn-line-height: var(--line-height-sm);
+    --btn-border-width: 1px;
+    --btn-border-radius: 5px;
+    --btn-border-style: solid;
+    --btn-padding: var(--space-xs) var(--space-sm);
+    --btn-transition: color ease-out 0.15s, background-color ease-out 0.15s, border-color ease-out 0.15s;
+
+    --btn-main-border-color: var(--link-color);
+    --btn-main-bg: var(--link-color);
+    --btn-main-color: var(--white);
+    --btn-main-border-color-hover: var(--link-color-hover);
+    --btn-main-bg-hover: var(--link-color-hover);
+    --btn-main-color-hover: var(--white);
+
+    --btn-alt-border-color: var(--link-color);
+    --btn-alt-bg: transparent;
+    --btn-alt-color: var(--link-color);
+    --btn-alt-border-color-hover: var(--link-color-hover);
+    --btn-alt-bg-hover: var(--link-color-hover);
+    --btn-alt-color-hover: var(--white);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/*
+  INIT
+*/
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+body {
+    font-family: var(--main-font);
+    color: var(--main-text-color);
+    font-weight: var(--font-weight-normal);
+    font-size: var(--main-font-size);
+    line-height: var(--main-line-height);
+    background-color: var(--main-bg);
 }
 
-.App-link {
-  color: #61dafb;
+a {
+    color: var(--link-color);
+    cursor: pointer;
+    text-decoration: underline;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+b,
+strong {
+    font-weight: var(--font-weight-bold);
+}
+
+a:hover,
+a:focus {
+    color: var(--link-color-hover);
+}
+
+*:first-child {
+    margin-top: 0;
+}
+
+*:last-child {
+    margin-bottom: 0;
+}
+
+figure {
+    margin: 0;
+}
+
+img {
+    display: block;
+    max-width: 100%;
+}
+
+/*
+ Don't know how to do it with styled components :
+ Don't double spacing for 2 sibling sections (add exceptions if background may be different)
+*/
+.section + .section > .container {
+    padding-top: 0;
 }
