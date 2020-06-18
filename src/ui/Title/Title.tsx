@@ -10,6 +10,30 @@ interface TitleProps {
     tag: TitleTag;
     margin?: TitleMargin;
 }
+
+// Tricky,
+// see https://stackoverflow.com/questions/47077210/using-styled-components-with-props-and-typescript/52045733#52045733
+interface StlTitleProps {
+    as: any;
+    type: TitleType;
+    margin?: string;
+}
+
+const StlTitle = styled.h1`
+    margin-top: 0;
+    line-height: var(--line-height-sm);
+    
+    color: ${(props: StlTitleProps) => 'var(--' + props.type + '-color)'};
+    font-size: ${(props: StlTitleProps) => 'var(--' + props.type + '-font-size)'};
+    font-weight: ${(props: StlTitleProps) => 'var(--' + props.type + '-font-weight)'};
+    
+    margin-bottom: ${(props: StlTitleProps) => props.margin};
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+`;
+
 const Title: React.FC<PropsWithChildren<TitleProps>> = (
     {
         type,
@@ -37,21 +61,8 @@ const Title: React.FC<PropsWithChildren<TitleProps>> = (
             marginVar = 'var(--space-md)';
     }
 
-    const StlTitle = styled[tag]`
-        margin-top: 0;
-        line-height: var(--line-height-sm);
-        
-        color: var(--${type}-color);
-        font-size: var(--${type}-font-size);
-        font-weight: var(--${type}-font-weight);
-        
-        &:not(:last-child) {
-          margin-bottom: ${marginVar};
-        }
-    `;
-
     return (
-        <StlTitle>
+        <StlTitle as={tag} type={type} margin={marginVar}>
             {children}
         </StlTitle>
     );

@@ -1,10 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const app = express();
 
+// Allow all for dev
+app.use(cors());
+
 // Settings
-const SERVER_PORT = 3000; // Listening port
+const SERVER_PORT = 4000; // Listening port
 const REQUEST_SUCCESS_RATE = 1; // Optional challenge: set this to have requests to backend randomly failing
 
 // Load data
@@ -178,6 +182,9 @@ app.post('/auth', (request, response) => {
 
 // Logout route
 app.post('/logout', (request, response) => {
+
+  console.log('logout', request.body);
+
   // Dice of death
   if (!rollDice()) {
     response.status(503).send("Server failure");
@@ -436,8 +443,14 @@ app.post('/streams', (request, response) => {
   }
 });
 
+app.get('/testage', (request, response) => {
+  response.status(200).send('a marche');
+});
+
 // Sliced bandwidth
 app.post('/bandwidth', (request, response) => {
+
+  console.log('bandwidth req');
   // Dice of death
   if (!rollDice()) {
     response.status(503).send("Server failure");
@@ -452,9 +465,11 @@ app.post('/bandwidth', (request, response) => {
     return;
   }
 
+
   // Check session validity
   const userId = authMap.get(request.body.session_token);
   if (userId) {
+    console.log('userId ok');
     // Slice out the data we need"
     const wholeData = bandwidthData.get(clientData[userId].clientid);
     const fromTimestamp = request.body.from;
@@ -467,10 +482,12 @@ app.post('/bandwidth', (request, response) => {
         }
       }
     }
+    console.log('wholeData', wholeData);
+    console.log('slicedData', slicedData);
 
     // Different responses depending on aggregation (or not)
     if (!request.body.aggregate) {
-      response.send(slicedData);
+      response.status(200).send(slicedData);
     } else {
       if (slicedData.cdn.length === 0 || slicedData.p2p.length === 0) {
         response.status(404).send("No data available in requested time range");
@@ -513,7 +530,7 @@ app.post('/bandwidth', (request, response) => {
           console.log('POST, /bandwidth 403');
           return;
       }
-      response.send({
+      response.status(200).send({
         cdn: aggregateFunc(slicedData.cdn.map((entry) => entry[1])),
         p2p: aggregateFunc(slicedData.p2p.map((entry) => entry[1])),
       });

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PropsWithChildren } from 'react';
 import Header from './Header/Header';
 import Footer from './Footer/Footer';
 import styled from 'styled-components';
@@ -14,14 +14,18 @@ const StlMain = styled.main`
   flex-grow: 1;
 `;
 
+interface LayoutPros {
+    loginClicked: () => {},
+    logoutClicked: () => {},
+}
 
-const Layout: React.FC = (props) => {
+const Layout: React.FC<PropsWithChildren<LayoutPros>> = ({children, loginClicked, logoutClicked}) => {
 
     return (
         <StlLayout>
-            <Header />
+            <Header onLoginClicked={loginClicked} onLogoutClicked={logoutClicked} />
             <StlMain role="main">
-                {props.children}
+                {children}
             </StlMain>
             <Footer />
         </StlLayout>

@@ -53,7 +53,7 @@
     --blue: #162993;
     --blue2: #101e68;
     --orange: #eb8e21;
-    --orange2: #b46911;
+    --orange2: #d97c0e;
     --red: #e24335;
     --red2: #b1352a;
     --green: #14a872;
@@ -145,7 +145,7 @@
     --title2-font-size: 1.5rem;
     --title2-font-weight: var(--font-weight-bold);
 
-    --title3-color: var(--primary-color);
+    --title3-color: var(--main-text-color);
     --title3-font-size: 1.2rem;
     --title3-font-weight: var(--font-weight-bold);
 

@@ -1,6 +1,8 @@
-import React from 'react';
+import React, { PropsWithChildren, useContext } from 'react';
 import Container from '../Container/Container';
 import styled from 'styled-components';
+import { AuthContext } from '../../shared/AuthContext';
+import Btn from '../../ui/Btn/Btn';
 
 const StlHeader = styled.header`
     background: var(--header-bg);
@@ -22,7 +24,29 @@ const StlNav = styled.nav`
   text-align:right;
 `;
 
-const Header: React.FC = () => {
+interface HeaderProps {
+    onLoginClicked: () => {},
+    onLogoutClicked: () => {},
+}
+const Header: React.FC<PropsWithChildren<HeaderProps>> = ({onLoginClicked, onLogoutClicked}) => {
+
+    const userContext = useContext(AuthContext);
+
+    console.log('userContext', userContext);
+
+    let btn = (
+        <Btn btnType="button" onClick={onLoginClicked}>
+            Login
+        </Btn>
+    );
+
+    if (userContext.user) {
+        btn = (
+            <Btn btnType="button" onClick={onLogoutClicked}>
+                Logout
+            </Btn>
+        );
+    }
 
     return (
         <StlHeader>
@@ -30,7 +54,7 @@ const Header: React.FC = () => {
                 <StlHeaderContent>
                     <StlTitle>MyStream</StlTitle>
                     <StlNav>
-                        Nav should be there
+                        {btn}
                     </StlNav>
                 </StlHeaderContent>
             </Container>

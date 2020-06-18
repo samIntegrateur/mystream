@@ -1,27 +1,134 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './App.css';
 import Layout from './layout/Layout';
 import Section from './layout/Section/Section';
 import Title from './ui/Title/Title';
 import Capacity from './components/Capacity/Capacity';
 import Concurrent from './components/Concurrent/Concurrent';
+import { AuthContext, UserContext } from './shared/AuthContext';
+import { API_URL, PASSWORD, USER } from './shared/const';
 
 function App() {
-  return (
-    <Layout>
+
+    const userContext = useContext(AuthContext);
+
+    const [user, setUser] = useState<Partial<UserContext>>(userContext);
+
+    const [firstCheck, setFirstCheck] = useState(true);
+
+    // check localstorage
+    useEffect(() => {
+
+        if (firstCheck && !userContext.user) {
+            setFirstCheck(false);
+            console.log('getting storage');
+            const token = localStorage.getItem('mystreamtoken');
+            if (token) {
+                console.log('token existing, provide context');
+                setUser({
+                    user: USER,
+                    token,
+                });
+            }
+        }
+    }, [userContext.user, firstCheck]);
+
+    const loginHandler = async () => {
+        console.log('login');
+
+        try {
+            const response = await fetch(`${API_URL}/auth`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    identifiant: USER,
+                    password: PASSWORD,
+                })
+            });
+
+            console.log('response', response);
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error('An error occurred');
+            }
+
+            const data = await response.json();
+            console.log('data', data);
+
+            localStorage.setItem('mystreamtoken', data.session_token);
+
+            setUser({
+                user: USER,
+                token: data.session_token,
+            });
+
+        } catch (e) {
+            console.log('error', e);
+        }
+
+    };
+
+    const logoutHandler = async () => {
+        console.log('logout');
+
+        try {
+            const response = await fetch(`${API_URL}/logout`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_token: user.token,
+                })
+            });
+
+            console.log('response', response);
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error('An error occurred');
+            }
+
+
+            localStorage.removeItem('mystreamtoken');
+            setUser({});
+
+        } catch (e) {
+            console.log('error', e);
+        }
+
+    };
+
+    let content: JSX.Element = (
         <Section>
-            <Title tag="h1" type="title1">
-                Welcome aboard&nbsp;!
-            </Title>
-        </Section>gi
-        <Section>
-            <Capacity />
+            <p>Please login first</p>
         </Section>
-        <Section>
-            <Concurrent />
-        </Section>
-    </Layout>
-  );
+    );
+
+    if (user.user) {
+        content = (
+            <>
+                <Section>
+                    <Title tag="h1" type="title1">
+                        Welcome {user.user}!
+                    </Title>
+                </Section>
+                <Section>
+                    <Capacity/>
+                </Section>
+                <Section>
+                    <Concurrent/>
+                </Section>
+            </>
+        )
+    }
+
+    return (
+        <AuthContext.Provider value={user}>
+            <Layout loginClicked={loginHandler} logoutClicked={logoutHandler}>
+                {content}
+            </Layout>
+        </AuthContext.Provider>
+    );
 }
 
 export default App;
