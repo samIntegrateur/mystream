@@ -4,6 +4,7 @@ import breakpoints from '../../breakpoints';
 
 interface ContainerProps {
   small?: boolean;
+  full?: boolean;
 }
 
 // This may not be the best way but currently I don't know how to use a complex process like this
@@ -16,13 +17,13 @@ class Container extends React.Component<ContainerProps> {
     if (currentBp.min) {
       return `
        @media (min-width: ${currentBp.min}) {
-          width: ${currentBp.container};
+          width: ${this.props.full ? '100%' : currentBp.container};
           padding: ${this.props.small ? currentBp.paddingYsm : currentBp.paddingY} ${currentBp.paddingX};
        }
     `;
     } else {
       return `
-        width: ${breakpoints[breakpoint].container};
+        width: ${this.props.full ? '100%' : breakpoints[breakpoint].container};
         padding: ${this.props.small ? currentBp.paddingYsm : currentBp.paddingY} ${currentBp.paddingX};
     `;
     }

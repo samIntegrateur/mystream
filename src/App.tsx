@@ -16,6 +16,53 @@ function App() {
 
     const [firstCheck, setFirstCheck] = useState(true);
 
+
+    const resetUser = () => {
+        console.log('reset user');
+        localStorage.removeItem('mystreamtoken');
+        setUser({});
+    };
+
+
+    // If the be server has been restarted, token from localstorage may be invalid
+    // todo: make a useCallback ?
+    const checkToken = async (token: string) => {
+        console.log('checkToken');
+        try {
+            const response = await fetch(`${API_URL}/checktoken`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    session_token: token,
+                })
+            });
+
+            console.log('response', response);
+            if (response.status !== 200 && response.status !== 201) {
+                throw new Error('An error occurred');
+            }
+
+            const data = await response.json();
+            console.log('data', data);
+
+            if (data.isValid) {
+                console.log('token existing, provide context');
+                setUser({
+                    user: USER,
+                    token,
+                });
+            } else {
+                resetUser();
+            }
+
+        } catch (e) {
+            console.log('error', e);
+        }
+    };
+
+
     // check localstorage
     useEffect(() => {
 
@@ -23,15 +70,12 @@ function App() {
             setFirstCheck(false);
             console.log('getting storage');
             const token = localStorage.getItem('mystreamtoken');
+
             if (token) {
-                console.log('token existing, provide context');
-                setUser({
-                    user: USER,
-                    token,
-                });
+                checkToken(token);
             }
         }
-    }, [userContext.user, firstCheck]);
+    }, [userContext.user, firstCheck, checkToken]);
 
     const loginHandler = async () => {
         console.log('login');
@@ -88,9 +132,7 @@ function App() {
                 throw new Error('An error occurred');
             }
 
-
-            localStorage.removeItem('mystreamtoken');
-            setUser({});
+            resetUser();
 
         } catch (e) {
             console.log('error', e);

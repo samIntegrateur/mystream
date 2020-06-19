@@ -4,14 +4,6 @@
 - In the 'mock-backend' folder, run `npm instal` or `yarn install` to install dependencies, 
 - Then launch the server with `npm start` or `yarn start`
 
-## Clean user
-<b>WARNING</b> When server is killed (or when you restart it)
- you should go to your browser developer tools and remove the "<b>mystreamtoken</b>" from Local Storage.
- 
- Otherwise when you restart the server, the front-end will wrongly consider you're logged in.
- 
- I know this is a very bad experience, but we are far from production, right ? 
-
 ---
 
 # Generated doc from Create React App

@@ -211,6 +211,20 @@ app.post('/logout', (request, response) => {
   }
 });
 
+
+app.post('/checktoken', (request, response) => {
+  if (!request.body.session_token) {
+    response.status(400).send();
+    console.log('POST, /checktoken 400');
+    return;
+  }
+
+  const isValidToken = !!(authMap.get(request.body.session_token));
+  response.send({
+    isValid: isValidToken
+  });
+});
+
 // User info route
 app.post('/myinfo', (request, response) => {
   // Dice of death
